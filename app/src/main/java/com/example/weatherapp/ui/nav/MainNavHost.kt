@@ -8,13 +8,16 @@ import androidx.navigation.compose.composable
 import com.example.weatherapp.ui.screens.HomePage
 import com.example.weatherapp.ui.screens.ListPage
 import com.example.weatherapp.ui.screens.MapPage
-
+import com.example.weatherapp.MainViewModel
 @Composable
-fun MainNavHost(navController: NavHostController, modifier: Modifier) {
-    // Usamos as rotas serializáveis definidas no BottomNavItem.kt
+fun MainNavHost(
+    navController: NavHostController,
+    modifier: Modifier,
+    viewModel: MainViewModel
+) {
     NavHost(navController = navController, startDestination = Route.Home) {
-        composable<Route.Home> { HomePage(modifier = modifier) }
-        composable<Route.List> { ListPage(modifier = modifier) }
-        composable<Route.Map> { MapPage(modifier = modifier) }
+        composable<Route.Home> { HomePage(modifier = modifier, viewModel = viewModel) }
+        composable<Route.List> { ListPage(modifier = modifier, viewModel = viewModel) }
+        composable<Route.Map> { MapPage(modifier = modifier, viewModel = viewModel) }
     }
 }

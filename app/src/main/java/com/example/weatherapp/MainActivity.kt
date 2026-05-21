@@ -3,6 +3,7 @@ package com.example.weatherapp
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -18,14 +19,14 @@ import com.example.weatherapp.ui.nav.MainNavHost
 import com.example.weatherapp.ui.theme.WeatherAppTheme
 import androidx.compose.ui.platform.LocalContext
 
-
-@OptIn(ExperimentalMaterial3Api::class) // Necessário para TopAppBar conforme o PDF
+@OptIn(ExperimentalMaterial3Api::class)
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val viewModel: MainViewModel by viewModels()
         setContent {
             WeatherAppTheme {
-                MainScreen()
+                MainScreen(viewModel = viewModel)
             }
         }
     }
@@ -33,8 +34,8 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen() {
-    val navController = rememberNavController() // [cite: 117]
+fun MainScreen(viewModel: MainViewModel) {
+    val navController = rememberNavController()
     val items = listOf(
         BottomNavItem.HomeButton,
         BottomNavItem.ListButton,
@@ -53,17 +54,17 @@ fun MainScreen() {
                 }
             )
         },
-        bottomBar = { // [cite: 131]
-            BottomNavBar(navController, items) // [cite: 139]
+        bottomBar = {
+            BottomNavBar(navController, items)
         },
-        floatingActionButton = { // [cite: 140]
-            FloatingActionButton(onClick = { /* Ação do botão */ }) {
+        floatingActionButton = {
+            FloatingActionButton(onClick = { /* TODO Parte 3 */ }) {
                 Icon(Icons.Default.Add, contentDescription = "Adicionar")
             }
         }
-    ) { innerPadding -> // [cite: 145]
-        Box(modifier = Modifier.padding(innerPadding)) { // [cite: 146]
-            MainNavHost(navController, Modifier) // [cite: 148]
+    ) { innerPadding ->
+        Box(modifier = Modifier.padding(innerPadding)) {
+            MainNavHost(navController, Modifier, viewModel)
         }
     }
 }
