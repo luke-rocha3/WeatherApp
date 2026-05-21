@@ -1,28 +1,17 @@
 package com.example.weatherapp
 
 import android.app.Activity
+import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Button
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -52,48 +41,50 @@ fun LoginPage(modifier: Modifier = Modifier) {
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
 
-    // EXATAMENTE COMO NO PASSO 3 DA PRÁTICA:
     val activity = LocalContext.current as Activity
+
     Column(
         modifier = modifier.padding(24.dp).fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // PASSO 5 DA PRÁTICA:
-        val modifier = modifier.fillMaxWidth(fraction = 0.9f)
+        val modifierInput = Modifier.fillMaxWidth(fraction = 0.9f)
 
-        Text(
-            text = "Bem-vindo/a!",
-            fontSize = 24.sp
-        )
+        Text(text = "Bem-vindo/a!", fontSize = 24.sp)
+
         OutlinedTextField(
             value = email,
             label = { Text(text = "Digite seu e-mail") },
-            modifier = modifier,
+            modifier = modifierInput,
             onValueChange = { email = it }
         )
         OutlinedTextField(
             value = password,
             label = { Text(text = "Digite sua senha") },
-            modifier = modifier,
+            modifier = modifierInput,
             onValueChange = { password = it },
             visualTransformation = PasswordVisualTransformation()
         )
         Spacer(modifier = Modifier.size(12.dp))
 
-        // FINAL DO PASSO 6 DA PRÁTICA (Arrumando os botões na Row):
         Row(
-            modifier = modifier.padding(12.dp).fillMaxWidth(),
+            modifier = Modifier.padding(12.dp).fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
         ) {
             Button(
                 onClick = {
-                    Toast.makeText(activity, "Login OK!", Toast.LENGTH_LONG).show()
+                    // CÓDIGO DA PARTE 3 - PASSO 2:
+                    activity.startActivity(
+                        Intent(activity, MainActivity::class.java).setFlags(
+                            FLAG_ACTIVITY_SINGLE_TOP
+                        )
+                    )
                 },
-                enabled = email.isNotEmpty() && password.isNotEmpty() // PASSO 8
+                enabled = email.isNotEmpty() && password.isNotEmpty()
             ) {
                 Text("Login")
             }
+
             Button(
                 onClick = { email = ""; password = "" },
                 modifier = Modifier.padding(start = 16.dp)
