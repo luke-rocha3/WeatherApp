@@ -11,11 +11,16 @@ import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.example.weatherapp.ui.nav.BottomNavBar
 import com.example.weatherapp.ui.nav.BottomNavItem
 import com.example.weatherapp.ui.nav.MainNavHost
+import com.example.weatherapp.ui.screens.CityDialog
 import com.example.weatherapp.ui.theme.WeatherAppTheme
 import androidx.compose.ui.platform.LocalContext
 
@@ -42,6 +47,16 @@ fun MainScreen(viewModel: MainViewModel) {
         BottomNavItem.MapButton
     )
 
+    var showDialog by remember { mutableStateOf(false) }
+
+    if (showDialog) CityDialog(
+        onDismiss = { showDialog = false },
+        onConfirm = { city ->
+            if (city.isNotBlank()) viewModel.add(city)
+            showDialog = false
+        }
+    )
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -58,7 +73,7 @@ fun MainScreen(viewModel: MainViewModel) {
             BottomNavBar(navController, items)
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { /* TODO Parte 3 */ }) {
+            FloatingActionButton(onClick = { showDialog = true }) {
                 Icon(Icons.Default.Add, contentDescription = "Adicionar")
             }
         }
