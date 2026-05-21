@@ -85,6 +85,15 @@ fun LoginPage(modifier: Modifier = Modifier) {
                 Text("Login")
             }
 
+            // Dentro da Row que contém os botões de Login e Limpar:
+            Button(
+                onClick = {
+                    activity.startActivity(Intent(activity, RegisterActivity::class.java))
+                }
+            ) {
+                Text("Registrar")
+            }
+
             Button(
                 onClick = { email = ""; password = "" },
                 modifier = Modifier.padding(start = 16.dp)
