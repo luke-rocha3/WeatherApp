@@ -79,7 +79,6 @@ fun MainScreen(viewModel: MainViewModel) {
                     val context = LocalContext.current
                     IconButton(onClick = {
                         Firebase.auth.signOut()
-                        (context as? ComponentActivity)?.finish()
                     }) {
                         Icon(Icons.AutoMirrored.Filled.ExitToApp, contentDescription = "Sair")
                     }
