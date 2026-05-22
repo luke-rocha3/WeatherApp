@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "790776605215",
+    "project_id": "celtic-hub-354305",
+    "storage_bucket": "celtic-hub-354305.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:790776605215:android:7532f1d1c7a07aef63c32a",
+        "android_client_info": {
+          "package_name": "com.example.weatherapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAjqmtp_WmwcIORX441-jshJaxYDF-2Wts"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
