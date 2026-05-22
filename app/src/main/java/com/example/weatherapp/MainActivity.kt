@@ -28,6 +28,8 @@ import com.example.weatherapp.ui.nav.MainNavHost
 import com.example.weatherapp.ui.nav.Route
 import com.example.weatherapp.ui.screens.CityDialog
 import com.example.weatherapp.ui.theme.WeatherAppTheme
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 
 @OptIn(ExperimentalMaterial3Api::class)
 class MainActivity : ComponentActivity() {
@@ -75,7 +77,10 @@ fun MainScreen(viewModel: MainViewModel) {
                 title = { Text("Bem-vindo/a!") },
                 actions = {
                     val context = LocalContext.current
-                    IconButton(onClick = { (context as? ComponentActivity)?.finish() }) {
+                    IconButton(onClick = {
+                        Firebase.auth.signOut()
+                        (context as? ComponentActivity)?.finish()
+                    }) {
                         Icon(Icons.AutoMirrored.Filled.ExitToApp, contentDescription = "Sair")
                     }
                 }

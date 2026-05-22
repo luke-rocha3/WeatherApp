@@ -14,6 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 
 class RegisterActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,7 +34,6 @@ fun RegisterPage(activity: Activity) {
     var senha by rememberSaveable { mutableStateOf("") }
     var repSenha by rememberSaveable { mutableStateOf("") }
 
-    // Condição de habilitação do botão (Passo 6)
     val isEnabled = nome.isNotEmpty() && email.isNotEmpty() && senha.isNotEmpty() && senha == repSenha
 
     Column(
@@ -53,8 +54,17 @@ fun RegisterPage(activity: Activity) {
             Button(
                 enabled = isEnabled,
                 onClick = {
-                    Toast.makeText(activity, "Registro realizado com sucesso!", Toast.LENGTH_SHORT).show()
-                    activity.finish()
+                    Firebase.auth.createUserWithEmailAndPassword(email, senha)
+                        .addOnCompleteListener(activity) { task ->
+                            if (task.isSuccessful) {
+                                Toast.makeText(activity,
+                                    "Registro OK!", Toast.LENGTH_LONG).show()
+                                activity.finish()
+                            } else {
+                                Toast.makeText(activity,
+                                    "Registro FALHOU!", Toast.LENGTH_LONG).show()
+                            }
+                        }
                 }
             ) { Text("Registrar") }
 
