@@ -21,6 +21,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.weatherapp.api.WeatherService
 import com.example.weatherapp.db.fb.FBDatabase
 import com.example.weatherapp.ui.nav.BottomNavBar
 import com.example.weatherapp.ui.nav.BottomNavItem
@@ -37,8 +38,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val fbDB = remember { FBDatabase() }
+            val weatherService = remember { WeatherService() }
             val viewModel: MainViewModel = viewModel(
-                factory = MainViewModelFactory(fbDB)
+                factory = MainViewModelFactory(fbDB, weatherService)
             )
             WeatherAppTheme {
                 MainScreen(viewModel = viewModel)
@@ -69,7 +71,7 @@ fun MainScreen(viewModel: MainViewModel) {
     if (showDialog) CityDialog(
         onDismiss = { showDialog = false },
         onConfirm = { city ->
-            if (city.isNotBlank()) viewModel.add(city)
+            if (city.isNotBlank()) viewModel.addCity(city)
             showDialog = false
         }
     )
