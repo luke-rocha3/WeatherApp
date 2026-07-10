@@ -1,17 +1,18 @@
 package com.example.weatherapp
 
-import androidx.compose.runtime.mutableStateListOf
-import com.example.weatherapp.api.toWeather
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.weatherapp.api.WeatherService
+import com.example.weatherapp.api.toForecast
+import com.example.weatherapp.api.toWeather
 import com.example.weatherapp.db.fb.FBCity
 import com.example.weatherapp.db.fb.FBDatabase
 import com.example.weatherapp.db.fb.FBUser
 import com.example.weatherapp.db.fb.toFBCity
 import com.example.weatherapp.model.City
+import com.example.weatherapp.model.Forecast
 import com.example.weatherapp.model.User
 import com.example.weatherapp.model.Weather
 import com.google.android.gms.maps.model.LatLng
@@ -25,10 +26,16 @@ class MainViewModel(
         get() = _cities.values.toList().sortedBy { it.name }
 
     private val _weather = mutableStateMapOf<String, Weather>()
+    private val _forecast = mutableStateMapOf<String, List<Forecast>?>()
 
     private val _user = mutableStateOf<User?>(null)
     val user: User?
         get() = _user.value
+
+    private var _city = mutableStateOf<String?>(null)
+    var city: String?
+        get() = _city.value
+        set(tmp) { _city.value = tmp }
 
     init {
         db.setListener(this)
@@ -59,10 +66,23 @@ class MainViewModel(
         Weather.LOADING // retorno
     }
 
+    fun forecast(name: String) = _forecast.getOrPut(name) {
+        loadForecast(name)
+        emptyList() // retorno
+    }
+
     private fun loadWeather(name: String) {
         service.getWeather(name) { apiWeather ->
             apiWeather?.let {
                 _weather[name] = apiWeather.toWeather()
+            }
+        }
+    }
+
+    private fun loadForecast(name: String) {
+        service.getForecast(name) { apiForecast ->
+            apiForecast?.let {
+                _forecast[name] = apiForecast.toForecast()
             }
         }
     }
