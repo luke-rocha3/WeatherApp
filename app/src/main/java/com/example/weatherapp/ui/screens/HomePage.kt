@@ -5,6 +5,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.outlined.Notifications
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -44,6 +48,7 @@ fun HomePage(
                 )
             }
         } else {
+            val city = viewModel.cities.find { it.name == viewModel.city }
             Row {
                 AsyncImage(
                     model = viewModel.weather(viewModel.city!!).imgUrl,
@@ -53,10 +58,24 @@ fun HomePage(
                 )
                 Column {
                     Spacer(modifier = modifier.size(12.dp))
-                    Text(
-                        text = viewModel.city ?: "Selecione uma cidade...",
-                        fontSize = 28.sp
-                    )
+                    Row {
+                        Text(
+                            text = viewModel.city ?: "Selecione uma cidade...",
+                            fontSize = 28.sp
+                        )
+                        Spacer(modifier = modifier.size(8.dp))
+                        val icon = if (city?.isMonitored == true)
+                            Icons.Filled.Notifications
+                        else
+                            Icons.Outlined.Notifications
+                        Icon(
+                            imageVector = icon,
+                            contentDescription = "Monitorada?",
+                            modifier = Modifier.size(32.dp).clickable {
+                                viewModel.update(city = city!!.copy(isMonitored = !city.isMonitored))
+                            }
+                        )
+                    }
                     viewModel.city?.let { name ->
                         val weather = viewModel.weather(name)
                         Spacer(modifier = modifier.size(12.dp))

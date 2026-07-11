@@ -6,6 +6,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -46,6 +48,13 @@ fun CityItem(
             Text(modifier = Modifier, text = city.name, fontSize = 24.sp)
             Text(modifier = Modifier, text = desc, fontSize = 16.sp)
         }
+        val icon = if (city.isMonitored) Icons.Filled.Notifications else Icons.Outlined.Notifications
+        Icon(
+            imageVector = icon,
+            contentDescription = "Monitorada?",
+            modifier = Modifier.size(24.dp)
+        )
+        Spacer(modifier = Modifier.size(8.dp))
         IconButton(onClick = onClose) {
             Icon(Icons.Filled.Close, contentDescription = "Close")
         }
