@@ -26,6 +26,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.weatherapp.api.WeatherService
 import com.example.weatherapp.db.fb.FBDatabase
+import com.example.weatherapp.db.local.LocalDatabase
+import com.example.weatherapp.repo.Repository
 import com.example.weatherapp.monitor.ForecastMonitor
 import com.example.weatherapp.ui.nav.BottomNavBar
 import com.example.weatherapp.ui.nav.BottomNavItem
@@ -42,10 +44,15 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val fbDB = remember { FBDatabase() }
+            val localDB = remember {
+                val uid = Firebase.auth.currentUser?.uid ?: "anonymous"
+                LocalDatabase(this, uid)
+            }
+            val repository = remember { Repository(fbDB, localDB) }
             val weatherService = remember { WeatherService(this) }
             val forecastMonitor = remember { ForecastMonitor(this) }
             val viewModel: MainViewModel = viewModel(
-                factory = MainViewModelFactory(fbDB, weatherService, forecastMonitor)
+                factory = MainViewModelFactory(repository, weatherService, forecastMonitor)
             )
 
             DisposableEffect(Unit) {
