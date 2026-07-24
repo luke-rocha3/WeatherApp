@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     id("org.jetbrains.kotlin.plugin.serialization")
+    id("com.google.devtools.ksp") version "2.3.4"   // ADICIONADO
 
     // Deve vir depois dos outros plugins (Bug)
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
@@ -44,8 +45,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_21   // ALTERADO (era VERSION_11)
+        targetCompatibility = JavaVersion.VERSION_21   // ALTERADO (era VERSION_11)
     }
     buildFeatures {
         compose = true
@@ -84,6 +85,12 @@ dependencies {
 
     // WorkManager (NOVO)
     implementation("androidx.work:work-runtime-ktx:2.10.0")
+
+    // Room (NOVO)
+    val room_version = "2.8.4"
+    implementation("androidx.room:room-runtime:$room_version")
+    implementation("androidx.room:room-ktx:$room_version")
+    ksp("androidx.room:room-compiler:$room_version")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
