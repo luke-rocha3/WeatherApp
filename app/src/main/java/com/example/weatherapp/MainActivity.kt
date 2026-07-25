@@ -22,11 +22,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.core.util.Consumer
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.weatherapp.api.WeatherService
 import com.example.weatherapp.db.fb.FBDatabase
 import com.example.weatherapp.db.local.LocalDatabase
+import com.example.weatherapp.model.User
 import com.example.weatherapp.repo.Repository
 import com.example.weatherapp.monitor.ForecastMonitor
 import com.example.weatherapp.ui.nav.BottomNavBar
@@ -55,6 +57,8 @@ class MainActivity : ComponentActivity() {
                 factory = MainViewModelFactory(repository, weatherService, forecastMonitor)
             )
 
+            val user = viewModel.user.collectAsStateWithLifecycle(null).value
+
             DisposableEffect(Unit) {
                 val listener = Consumer<Intent> { intent ->
                     viewModel.city = intent.getStringExtra("city")
@@ -65,7 +69,7 @@ class MainActivity : ComponentActivity() {
             }
 
             WeatherAppTheme {
-                MainScreen(viewModel = viewModel)
+                MainScreen(viewModel = viewModel, user = user)
             }
         }
     }
@@ -73,7 +77,7 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(viewModel: MainViewModel) {
+fun MainScreen(viewModel: MainViewModel, user: User?) {
     val navController = rememberNavController()
     val items = listOf(
         BottomNavItem.HomeButton,
@@ -107,7 +111,7 @@ fun MainScreen(viewModel: MainViewModel) {
         topBar = {
             TopAppBar(
                 title = {
-                    val name = viewModel.user?.name ?: "[carregando...]"
+                    val name = user?.name ?: "[carregando...]"
                     Text("Bem-vindo/a! $name")
                 },
                 actions = {
